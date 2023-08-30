@@ -1,0 +1,80 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: whitesmoke;
+}
+
+#container {
+    background-color: rgb(34, 34, 77);
+}
+
+#start {
+    position: absolute;
+    top: 50vh;
+    left: 530px;
+    font-size: 50px;
+}
+
+#playground {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+#player1, #player2 {
+    width: 10px;
+    height: 70px;
+    background-color: whitesmoke;
+}
+
+#player1 {
+    position: absolute;
+    top: 50vh;
+    left: 50px;
+}
+
+#player2 {
+    position: absolute;
+    top: 50vh;
+    right: 50px;
+}
+
+#mid-line {
+    width: 5px;
+    height: 95vh;
+    position: absolute;
+    left: 50vw;
+    bottom: 0;
+    border-left: 3px dotted whitesmoke;
+}
+
+#score {
+    position: absolute;
+    left: 680px;
+    z-index: 2;
+    height: 50%;
+    width: 300px;
+}
+
+#score #round {
+    display: block;
+    font-size: 30px;
+}
+
+#score #score-player1, #score-player2 {
+    font-size: 90px;
+}
+
+#score #score-player1 {
+    position: absolute;
+    top: 80px;
+    left: -180px;
+}
+
+#score #score-player2 {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+}
