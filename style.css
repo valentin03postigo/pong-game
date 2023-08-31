@@ -7,6 +7,7 @@
 
 #container {
     background-color: rgb(34, 34, 77);
+    max-height: 100vh;
 }
 
 #start {
@@ -23,7 +24,7 @@
     z-index: 1;
 }
 
-#player1, #player2 {
+#player1, #opponent {
     width: 10px;
     height: 70px;
     background-color: whitesmoke;
@@ -31,14 +32,24 @@
 
 #player1 {
     position: absolute;
-    top: 50vh;
+    top: 50%;
     left: 50px;
 }
 
-#player2 {
+#opponent {
     position: absolute;
     top: 50vh;
     right: 50px;
+}
+
+#ball {
+    width: 10px;
+    height: 10px;
+    background-color: whitesmoke;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
 }
 
 #mid-line {

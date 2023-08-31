@@ -5,27 +5,78 @@ document.body.addEventListener( 'keydown' , function(){
     START.textContent = ""
 
 })
+/* PLAYER MOVEMENT */
 
-const GAME_AREA = document.getElementById('playground') 
-const PLAYER1 = document.getElementById('player1')
+const PLAYER = document.getElementById('player1')
 
-let playerY = GAME_AREA.clientHeight / 2
+let playerY = document.body.clientHeight / 2
+let currentPlayerY = parseFloat(getComputedStyle(PLAYER).top)
 
-function player1Movement () {
+const PLAYGROUND = document.getElementById("playground")
 
-    GAME_AREA.addEventListener( 'keydown' , (e) => {
+console.log(PLAYGROUND.clientHeight)
 
-        console.log(e)
+function movePlayer (direction) {
 
-        if ( e.key === 'ArrowUp') {
+    if ( direction === "up" ) {
 
-            console.log('cad')
-        }
+        playerY -= 15
 
-    })
+    } else if ( direction === "down") {
 
-    PLAYER1.style.top = playerY + 'px';
+        playerY += 15
+
+    }
+
+    PLAYER.style.top = playerY + "px"
 
 }
 
-player1Movement()
+document.body.addEventListener ( 'keydown' , (e) => {
+
+    if ( e.key === "ArrowUp") {
+
+        console.log('arrowUp')
+        movePlayer("up")
+
+    } else if ( e.key === "ArrowDown" && currentPlayerY < 783) {
+
+        console.log('arrowDown')
+        movePlayer("down")
+
+    }
+
+})
+
+/* OPPONENT MOVEMENT */
+
+
+/* BALL MOVEMENT */
+
+const BALL = document.getElementById("ball")
+let currentBallX = parseFloat(getComputedStyle(BALL).left)
+let currentBallY = parseFloat(getComputedStyle(BALL).top)
+
+let ballX = document.body.clientWidth / 2
+
+const directionY = -1
+const directionX = 1
+
+function ballMove () {
+
+    currentBallX -= 10
+    BALL.style.left = currentBallX + "px"
+
+    let randomDistance = Math.random() * 10;
+    
+    currentBallY += randomDistance * direction
+    BALL.style.top = currentBallX + "px"
+
+
+    requestAnimationFrame(ballMove)
+
+}
+
+ballMove()
+
+
