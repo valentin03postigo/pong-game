@@ -8,11 +8,18 @@ document.body.addEventListener( 'keydown' , function(e){
 
         ballMove()
 
+        ballCollisionPlayers()
+
+        ballCollisionWindow()
+
         moveOpponent()
+
+        gameLoop()
 
     }
 
 })
+
 /* PLAYER MOVEMENT */
 
 const PLAYER = document.getElementById('player1')
@@ -24,38 +31,37 @@ let currentPlayerX = parseFloat(getComputedStyle(PLAYER).left)
 const PLAYGROUND = document.getElementById("playground")
 const MAX_TOP = 1.5 + "px"
 
-console.log(MAX_TOP)
-
 function movePlayer (direction) {
 
     if ( direction === "up" ) {
 
         if ( PLAYER.getBoundingClientRect().top >= 0 ) {
+
             playerY -= 20
+
         }
 
     } else if ( direction === "down") {
 
         if ( PLAYER.getBoundingClientRect().top < 711.5 ) {
+
         playerY += 20
+
         }
     }
 
     PLAYER.style.top = playerY + "px"
-    console.log(PLAYER.style.top)
+
 }
 
 document.body.addEventListener ( 'keydown' , (e) => {
 
     if ( e.key === "ArrowUp") {
 
-        console.log('arrowUp')
         movePlayer("up")
 
     } else if ( e.key === "ArrowDown") {
 
-        console.log(PLAYER.getBoundingClientRect())
-        console.log(PLAYGROUND.clientHeight)
         movePlayer("down")
 
     }
@@ -65,12 +71,40 @@ document.body.addEventListener ( 'keydown' , (e) => {
 /* OPPONENT MOVEMENT */
 
 const OPPONENT = document.getElementById("opponent")
+
+let opponentY = document.body.clientHeight / 2
 let currentOpponentY = parseFloat(getComputedStyle(OPPONENT).top)
 let currentOpponentX = parseFloat(getComputedStyle(OPPONENT).left)
 
 function moveOpponent () {
 
-    OPPONENT.style.top = (currentBallY - 4) + "px"
+    if ( currentBallX > document.body.clientWidth / 2 ) {
+
+        if ( BALL.getBoundingClientRect().y + BALL.clientHeight >= OPPONENT.getBoundingClientRect().y + OPPONENT.clientHeight ) {
+
+            opponentY += 4
+    
+        } else if ( BALL.getBoundingClientRect().y < OPPONENT.getBoundingClientRect().y ) {
+    
+            opponentY -= 4
+    
+        }
+
+    } else {
+
+        if ( BALL.getBoundingClientRect().y + BALL.clientHeight >= OPPONENT.getBoundingClientRect().y + OPPONENT.clientHeight ) {
+
+            opponentY += 2
+    
+        } else if ( BALL.getBoundingClientRect().y < OPPONENT.getBoundingClientRect().y ) {
+    
+            opponentY -= 2
+    
+        }
+
+    }
+
+    OPPONENT.style.top = opponentY + "px"
 
     requestAnimationFrame(moveOpponent)
 }
@@ -88,12 +122,47 @@ let directionY = 1
 
 function ballMove () {
 
-    if ( BALL.getBoundingClientRect().left === OPPONENT.getBoundingClientRect().left && 
-    BALL.getBoundingClientRect().top == OPPONENT.getBoundingClientRect().top ) {
+    currentBallX += 4 * directionX
+    BALL.style.left = currentBallX + "px"
 
-        directionX = -directionX
-        console.log('funciona')
+    if ( currentBallY <= 0 || currentBallY >= PLAYGROUND.clientHeight ) {
+
+        directionY = -directionY
+
     }
+
+    currentBallY += directionY * 4
+    BALL.style.top = currentBallY + "px"
+        
+        requestAnimationFrame(ballMove)
+    
+}
+
+/* COLLISIONS */
+
+function ballCollisionPlayers () {
+
+    if ( BALL.getBoundingClientRect().right === OPPONENT.getBoundingClientRect().left &&
+         BALL.getBoundingClientRect().y + BALL.clientHeight >= OPPONENT.getBoundingClientRect().y &&
+         BALL.getBoundingClientRect().y <= OPPONENT.getBoundingClientRect().y + OPPONENT.clientHeight) {
+
+    directionX = -directionX
+    
+    }
+
+    if ( BALL.getBoundingClientRect().left === PLAYER.getBoundingClientRect().right &&
+         BALL.getBoundingClientRect().y + BALL.clientHeight >= PLAYER.getBoundingClientRect().y &&
+         BALL.getBoundingClientRect().y <= PLAYER.getBoundingClientRect().y + PLAYER.clientHeight) {
+
+            directionX = -directionX
+
+        }
+
+    requestAnimationFrame(ballCollisionPlayers)
+
+}
+
+function ballCollisionWindow () {
 
     let randomDistance = Math.random() * PLAYGROUND.clientHeight;
 
@@ -106,18 +175,41 @@ function ballMove () {
         
     }
 
-    currentBallX += 5 * directionX
-    BALL.style.left = currentBallX + "px"
+    requestAnimationFrame(ballCollisionWindow)
 
-    if ( currentBallY <= 0 || currentBallY >= PLAYGROUND.clientHeight ) {
+}
 
-        directionY = -directionY
+/* SCORE */
+
+let scoreOpponent = document.getElementById("score-player2")
+let scorePlayer = document.getElementById("score-player1")
+
+let scorePlayerValue = 0
+let scoreOpponentValue = 0
+
+function score () {
+
+    if ( BALL.getBoundingClientRect().left <= 0 ) {
+
+        
+        scoreOpponentValue += 1
+        console.log(scoreOpponentValue)
+        scoreOpponent.innerHTML = scoreOpponentValue
 
     }
 
-    currentBallY += directionY * 5
-    BALL.style.top = currentBallY + "px"
-        
-        requestAnimationFrame(ballMove)
-    
+    if ( BALL.getBoundingClientRect().right >= 1440) {
+
+        scorePlayerValue += 1
+        scorePlayer.innerHTML = scorePlayerValue
+
+    }
+
+}
+
+function gameLoop () {
+
+    score()
+    requestAnimationFrame(gameLoop)
+
 }
